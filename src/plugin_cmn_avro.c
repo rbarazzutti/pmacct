@@ -1061,7 +1061,7 @@ void add_writer_name_and_pid_avro(avro_value_t value, char *name, pid_t writer_p
   char wid[SHORTSHORTBUFLEN];
   avro_value_t field;
 
-  snprintf(wid, SHORTSHORTBUFLEN, "%s", name);
+  snprintf(wid, SHORTSHORTBUFLEN, "%s/%u", name, writer_pid);
   pm_avro_check(avro_value_get_by_name(&value, "writer_id", &field, NULL));
   pm_avro_check(avro_value_set_string(&field, wid));
 }

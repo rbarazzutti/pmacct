@@ -747,7 +747,7 @@ int pretag_malloc_label(pt_label_t *label, int len)
 {
   if (!label) return ERR;
 
-  label->val = malloc(len);
+  label->val = malloc(len + 1);
   if (!label->val) {
     Log(LOG_ERR, "ERROR ( %s/%s ): malloc() failed (pretag_malloc_label).\n", config.name, config.type);
     return ERR;
@@ -761,7 +761,7 @@ int pretag_realloc_label(pt_label_t *label, int len)
 {
   if (!label) return ERR;
 
-  label->val = realloc(label->val, len);
+  label->val = realloc(label->val, len + 1);
   if (!label->val) {
     Log(LOG_ERR, "ERROR ( %s/%s ): malloc() failed (pretag_realloc_label).\n", config.name, config.type);
     return ERR;
@@ -840,13 +840,13 @@ int pretag_entry_process(struct id_entry *e, struct packet_ptrs *pptrs, pm_id_t 
       if (pptrs->label.len) {
 	char default_sep[] = ",";
 
-        if (pretag_realloc_label(&pptrs->label, label_local->len + pptrs->label.len + 1 /* sep */ + 1 /* null */)) return TRUE;
+        if (pretag_realloc_label(&pptrs->label, label_local->len + pptrs->label.len + 1 /* sep */)) return TRUE;
 	strncat(pptrs->label.val, default_sep, 1);
         strncat(pptrs->label.val, label_local->val, label_local->len);
         pptrs->label.val[pptrs->label.len] = '\0';
       }
       else {
-	if (pretag_malloc_label(&pptrs->label, label_local->len + 1 /* null */)) return TRUE;
+	if (pretag_malloc_label(&pptrs->label, label_local->len)) return TRUE;
 	strncpy(pptrs->label.val, label_local->val, label_local->len);
 	pptrs->label.val[pptrs->label.len] = '\0';
       }

@@ -530,7 +530,7 @@ int bgp_peer_log_msg(struct bgp_node *route, struct bgp_info *ri, afi_t afi, saf
 
 
 	if (kafka_host->sd_schema[0] == NULL) {
-	     Log(LOG_ERR, "ERROR ( %s/%s ): Missing schema for log_type=0 (bgp)", config.name, bms->log_str);
+	     Log(LOG_ERR, "ERROR ( %s/%s ): Missing schema for log_type=0 (bgp)\n", config.name, bms->log_str);
 	}
 	else if (serdes_schema_serialize_avro(kafka_host->sd_schema[0], &p_avro_obj, &p_avro_local_buf, &p_avro_len,
 					 kafka_host->errstr, sizeof(kafka_host->errstr))) {

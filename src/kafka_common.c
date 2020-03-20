@@ -429,7 +429,7 @@ int p_kafka_produce_data_to_part(struct p_kafka_host *kafka_host, void *data, si
   kafkap_ret_err_cb = FALSE;
 
   if (kafka_host && kafka_host->rk && kafka_host->topic) {
-    ret = rd_kafka_produce(kafka_host->topic, part, RD_KAFKA_MSG_F_COPY,
+    ret = rd_kafka_produce(kafka_host->topic, RD_KAFKA_PARTITION_UA, RD_KAFKA_MSG_F_COPY,
 			   data, data_len, kafka_host->key, kafka_host->key_len, NULL);
 
     if (ret == ERR) {
@@ -440,8 +440,6 @@ int p_kafka_produce_data_to_part(struct p_kafka_host *kafka_host, void *data, si
     }
   }
   else return ERR;
-
-  rd_kafka_poll(kafka_host->rk, 0);
 
   return ret; 
 }

@@ -433,6 +433,11 @@ int p_kafka_produce_data_to_part(struct p_kafka_host *kafka_host, void *data, si
 			   data, data_len, kafka_host->key, kafka_host->key_len, NULL);
 
     if (ret == ERR) {
+      if(errno==  ENOBUFS )  Log(LOG_ERR, "- maximum number of outstanding messages has been reached: \"queue.buffering.max.messages\" (RD_KAFKA_RESP_ERR__QUEUE_FULL)");
+        if(errno==   EMSGSIZE ) Log(LOG_ERR, "- message is larger than configured max size: \"messages.max.bytes\". (RD_KAFKA_RESP_ERR_MSG_SIZE_TOO_LARGE)");
+        if(errno==  ESRCH )Log(LOG_ERR, "- requested partition is unknown in the Kafka cluster. (RD_KAFKA_RESP_ERR__UNKNOWN_PARTITION)");
+        if(errno== ENOENT) Log(LOG_ERR, "- topic is unknown in the Kafka cluster. (RD_KAFKA_RESP_ERR__UNKNOWN_TOPIC)");
+
       Log(LOG_ERR, "ERROR ( %s/%s ): Failed to produce to topic %s partition %i: %s\n", config.name, config.type,
           rd_kafka_topic_name(kafka_host->topic), part, rd_kafka_err2str(rd_kafka_last_error()));
       p_kafka_close(kafka_host, TRUE);
